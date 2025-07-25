@@ -2,22 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                // Jenkins automatically clones the repo in a pipeline job, so this is usually redundant.
-                // But keeping it is okay for custom Git location jobs.
-                git 'https://github.com/NallaAravind/jenkins.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                // Avoid pipeline failure if requirements.txt doesn't exist
                 script {
                     if (fileExists('requirements.txt')) {
                         sh 'pip install -r requirements.txt'
                     } else {
-                        echo 'No requirements.txt file found. Skipping dependency installation.'
+                        echo 'No requirements.txt found. Skipping installation.'
                     }
                 }
             }
@@ -25,12 +16,11 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                // Check if the Python file exists before trying to run it
                 script {
                     if (fileExists('basic.py')) {
                         sh 'python basic.py'
                     } else {
-                        error 'basic.py not found in the repository!'
+                        error 'basic.py not found!'
                     }
                 }
             }
